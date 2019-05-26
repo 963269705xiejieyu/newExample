@@ -73,10 +73,11 @@
                 dataType: 'json',
                 success: function (back) {
                     //调用方法template('id', back)
-                    console.log(back);
-                    for (var key in back.data) {
-                        $("input" + key).val(back.data[key]);
+                    // console.log(back);
+                    for (const key in back.data) {
+                        $("input." + key).val(back.data[key]);
                     }
+                    // $(".nickname").val(back.data.nickname)
                     $(".user_pic").attr("src", back.data.user_pic);
                 }
             })
