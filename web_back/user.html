@@ -81,6 +81,11 @@
                     $(".user_pic").attr("src", back.data.user_pic);
                 }
             })
+            $("#exampleInputFile").change(function () {
+                var file = this.files[0];
+                var url = URL.createObjectURL(file);
+                $(this).prev().attr("src", url);
+            })
         })
     </script>
 </body>
