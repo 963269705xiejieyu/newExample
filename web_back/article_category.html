@@ -143,7 +143,7 @@
         $(function () {
             function get() {
                 $.ajax({
-                    url: 'https://autumnfish.cn/big32/admin/category_search',
+                    url: 'http://localhost:8000/admin/category_search',
                     type: 'get',/*get/post*/
                     dataType: 'json',
                     success: function (back) {
@@ -157,7 +157,7 @@
             get();
             $("#model_add").click(function () {
                 $.ajax({
-                    url: 'https://autumnfish.cn/big32/admin/category_add',
+                    url: 'http://localhost:8000/admin/category_add',
                     type: 'post',/*get/post*/
                     data: {
                         name: $('.name').val(),

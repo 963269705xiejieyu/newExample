@@ -68,7 +68,7 @@
     <script>
         $(function () {
             $.ajax({
-                url: 'https://autumnfish.cn/big32/admin/userinfo_get',
+                url: 'http://localhost:8000/admin/userinfo_get',
                 type: 'get',/*get/post*/
                 dataType: 'json',
                 success: function (back) {
@@ -91,7 +91,7 @@
                 //实例化一个FormData对象（表单标签必须是一个dom对象）
                 var formData = new FormData($('form')[0])
                 $.ajax({
-                    url: 'https://autumnfish.cn/big32/admin/userinfo_edit',
+                    url: 'http://localhost:8000/admin/userinfo_edit',
                     type: 'post',
                     data: formData,
                     contentType: false,

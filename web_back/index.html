@@ -137,7 +137,7 @@
             })
             $(".leave").click(function () {
                 $.ajax({
-                    url: 'https://autumnfish.cn/big/admin/logout',/*ajax接口请求地址*/
+                    url: 'http://localhost:8000/admin/logout',/*ajax接口请求地址*/
                     type: 'post',/*ajax接口请求方法(get/post)*/
                     success: function (back) {
                         console.log(back);
@@ -148,7 +148,7 @@
                 })
             })
             $.ajax({
-                url: 'https://autumnfish.cn/big32/admin/getuser',
+                url: 'http://localhost:8000/admin/getuser',
                 type: 'get',/*get/post*/
                 dataType: 'json',
                 success: function (back) {
