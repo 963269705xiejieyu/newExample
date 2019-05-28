@@ -34,7 +34,7 @@
                         <td>未分类</td>
                         <td>uncategorized</td>
                         <td class="text-center">
-                            <a href="javascript:editTr({&quot;id&quot;:&quot;1&quot;,&quot;slug&quot;:&quot;uncategorized&quot;,&quot;name&quot;:&quot;未分类&quot;});"
+                            <a href='javascript:editTr({"id":"1","slug":"uncategorized","name":"未分类"});'
                                 class="btn btn-info btn-xs">编辑</a>
                             <a href="javascript:deleteTr( 1 );" class="btn btn-danger btn-xs">删除</a>
                         </td>
@@ -44,7 +44,7 @@
                         <td>奇趣事</td>
                         <td>funny</td>
                         <td class="text-center">
-                            <a href="javascript:editTr({&quot;id&quot;:&quot;2&quot;,&quot;slug&quot;:&quot;funny&quot;,&quot;name&quot;:&quot;奇趣事&quot;});"
+                            <a href='javascript:editTr({"id":"2","slug":"funny","name":"奇趣事"});'
                                 class="btn btn-info btn-xs">编辑</a>
                             <a href="javascript:deleteTr( 2 );" class="btn btn-danger btn-xs">删除</a>
                         </td>
@@ -54,7 +54,7 @@
                         <td>会生活</td>
                         <td>living</td>
                         <td class="text-center">
-                            <a href="javascript:editTr({&quot;id&quot;:&quot;3&quot;,&quot;slug&quot;:&quot;living&quot;,&quot;name&quot;:&quot;会生活&quot;});"
+                            <a href='javascript:editTr({"id":"3","slug":"living","name":"会生活"});'
                                 class="btn btn-info btn-xs">编辑</a>
                             <a href="javascript:deleteTr( 3 );" class="btn btn-danger btn-xs">删除</a>
                         </td>
@@ -64,7 +64,7 @@
                         <td>爱旅行</td>
                         <td>travel</td>
                         <td class="text-center">
-                            <a href="javascript:editTr({&quot;id&quot;:&quot;4&quot;,&quot;slug&quot;:&quot;travel&quot;,&quot;name&quot;:&quot;爱旅行&quot;});"
+                            <a href='javascript:editTr({"id":"4","slug":"travel","name":"爱旅行"});'
                                 class="btn btn-info btn-xs">编辑</a>
                             <a href="javascript:deleteTr( 4 );" class="btn btn-danger btn-xs">删除</a>
                         </td>
@@ -73,7 +73,8 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
+                            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addModal"
+                                id="newAdd">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
@@ -90,13 +91,14 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <input type="hidden" name="id">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">分类名称:</label>
-                            <input type="text" class="form-control name" id="recipient-name">
+                            <input type="text" class="form-control name" name="name">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">分类别名:</label>
-                            <input type="text" class="form-control slug" id="recipient-name">
+                            <input type="text" class="form-control slug" name="slug">
                         </div>
                     </form>
                 </div>
@@ -133,8 +135,8 @@
             <td>{{$value.name}}</td>
             <td>{{$value.slug}}</td>
             <td class="text-center">
-                <a href="javascript:editTr({&quot;id&quot;:&quot;1&quot;,&quot;slug&quot;:&quot;uncategorized&quot;,&quot;name&quot;:&quot;未分类&quot;});" class="btn btn-info btn-xs">编辑</a>
-                <a href="javascript:deleteTr( 1 );" class="btn btn-danger btn-xs">删除</a>
+                <a href="javascript:editTr({'id':'{{$value.id}}','slug':'{{$value.slug}}','name':'{{$value.name}}'});" class="btn btn-info btn-xs">编辑</a>
+                <a href="javascript:deleteTr( {{$value.id}} );" class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
     {{/each}}
@@ -154,25 +156,72 @@
                     }
                 })
             }
-            get();
-            $("#model_add").click(function () {
+            window.deleteTr = function (id) {
                 $.ajax({
-                    url: 'http://localhost:8000/admin/category_add',
+                    url: 'http://localhost:8000/admin/category_delete',
                     type: 'post',/*get/post*/
                     data: {
-                        name: $('.name').val(),
-                        slug: $('.slug').val()
+                        id: id
                     },
-                    dataType: 'json',
                     success: function (back) {
                         //调用方法template('id', back)
                         // console.log(back);
-                        $('#addModal').modal('hide')
                         if (back.code == 200) {
                             get();
                         }
                     }
                 })
+            }
+            window.editTr = function (data) {
+                for (const key in data) {
+                    $("input[name=" + key + "]").val(data[key]);
+                }
+                $(".modal-title").text("请修改");
+                $("#model_add").text("保存").addClass("btn-success");
+            }
+            $("#newAdd").click(function () {
+                $(".modal-title").text("请添加");
+                $("#model_add").text("新增").removeClass("btn-success");
+                $("form input").val("");
+            })
+            get();
+            $("#model_add").click(function () {
+                if ($(this).hasClass("btn-success")) {
+                    $.ajax({
+                        url: 'http://localhost:8000/admin/category_edit',
+                        type: 'post',/*get/post*/
+                        data: $("form").serialize(),
+                        success: function (back) {
+                            //调用方法template('id', back)
+                            // console.log(back);
+                            if (back.code == 200) {
+                                get();
+                            }
+                        }
+                    })
+                } else {
+                    $.ajax({
+                        url: 'http://localhost:8000/admin/category_add',
+                        type: 'post',/*get/post*/
+                        data: {
+                            name: $('.name').val(),
+                            slug: $('.slug').val()
+                        },
+                        success: function (back) {
+                            //调用方法template('id', back)
+                            // console.log(back);
+                            $('#addModal').modal('hide');
+                            if (back.code == 200) {
+                                get();
+                            }
+                        }
+                    })
+                }
+                $('#addModal').modal('hide');
+                $("form input").val("");
+            })
+            $("#model_shutoff").click(function () {
+                $("form input").val("");
             })
         })
     </script>
