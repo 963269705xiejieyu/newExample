@@ -214,6 +214,21 @@
     <script>
         $(function () {
             var pageSelf = 1;
+            var totalPageSelf = 10;
+            var $pagination = $('.pagination');
+            var defaultOpts = {
+                totalPages: totalPageSelf,
+                visiblePages: 7,
+                first: "首页",
+                last: "尾页",
+                prev: "上一页",
+                next: "下一页",
+                onPageClick: function (event, page) {
+                    pageSelf = page;
+                    getArticle();
+                }
+            }
+            $pagination.twbsPagination(defaultOpts);
             function getArticle() {
                 $.ajax({
                     url: 'http://localhost:8000/admin/search',
@@ -228,6 +243,17 @@
                         // console.log(back);
                         var html = template('article', back);
                         $("tbody").html(html);
+                        var totalPages = back.totalPage;
+                        if (totalPageSelf != totalPages) {
+                            totalPageSelf = totalPages;
+                            $pagination.twbsPagination("destroy");
+                            $pagination.twbsPagination(
+                                $.extend({}, defaultOpts, {
+                                    startPage: 1,
+                                    totalPages: totalPages
+                                })
+                            )
+                        }
                     }
                 })
             }
@@ -242,18 +268,6 @@
                 }
             })
             getArticle();
-            $(".pagination").twbsPagination({
-                totalPages: 35,
-                visiblePages: 7,
-                first: "首页",
-                last: "尾页",
-                prev: "上一页",
-                next: "下一页",
-                onPageClick: function (event, page) {
-                    pageSelf = page;
-                    getArticle();
-                }
-            })
             $("#btnSearch").click(function (e) {
                 e.preventDefault();
                 getArticle();
